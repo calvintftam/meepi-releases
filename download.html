@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Downloading Meepi...</title>
+  <script>
+    // Detect Apple Silicon vs Intel
+    // All M1+ Macs report arm64 in some
+    // browsers but not all — safest approach
+    // is to check for the platform string
+
+    const isAppleSilicon = () => {
+      // Check if running on arm64
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl');
+      if (gl) {
+        const debugInfo = gl.getExtension(
+          'WEBGL_debug_renderer_info'
+        );
+        if (debugInfo) {
+          const renderer = gl.getParameter(
+            debugInfo.UNMASKED_RENDERER_WEBGL
+          ).toLowerCase();
+          if (renderer.includes('apple m') ||
+              renderer.includes('apple gpu')) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+
+    const arm64URL = "https://github.com/calvintftam/meepi-releases/releases/download/v0.1.1/Meepi-0.1.1-arm64.dmg";
+    const intelURL = "https://github.com/calvintftam/meepi-releases/releases/download/v0.1.1/Meepi-0.1.1.dmg";
+
+    window.onload = () => {
+      const url = isAppleSilicon() ? arm64URL : intelURL;
+      document.getElementById('link').href = url;
+      // Auto-start download after 1 second
+      setTimeout(() => { window.location = url; }, 1000);
+    };
+  </script>
+</head>
+<body style="font-family: Inter, sans-serif;
+  text-align: center; padding: 80px 20px;
+  background: #F8F7F5;">
+  <img src="https://meepi.io/icon-mark.png"
+    width="80" style="margin-bottom: 24px;"/>
+  <h1 style="font-size: 28px; color: #1A1714;">
+    Your download is starting...
+  </h1>
+  <p style="color: #7A7570; margin: 16px 0;">
+    If it doesn't start automatically,
+    <a id="link" href="#"
+      style="color: #E8725A;">
+      click here
+    </a>
+  </p>
+  <p style="color: #7A7570; font-size: 13px;">
+    Requires macOS 12 or later
+  </p>
+</body>
+</html>
